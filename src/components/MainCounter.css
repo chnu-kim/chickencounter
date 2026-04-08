@@ -19,7 +19,7 @@
   font-variant-numeric: tabular-nums;
 
   @media (max-width: 640px) {
-    font-size: 112px;
+    font-size: clamp(96px, 32vw, 128px);
     letter-spacing: -3px;
   }
 }
