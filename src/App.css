@@ -34,6 +34,16 @@
   gap: 16px;
 }
 
+.counter__number--inactive {
+  color: var(--text-3);
+}
+
+.inactive__message {
+  margin: 16px 0 0;
+  font-size: 14px;
+  color: var(--text-3);
+}
+
 .footnote__update {
   font-size: 12px;
   color: #666;

@@ -7,8 +7,12 @@ function parseDate(dateStr: string): KSTDate {
   return { year, month: month - 1, day };
 }
 
-const START_DATE_KST = parseDate(config.startDate);
+const START_DATE_KST: KSTDate | null = config.startDate ? parseDate(config.startDate) : null;
 const END_DATE_KST: KSTDate | null = config.endDate ? parseDate(config.endDate) : null;
+
+export function isActive(): boolean {
+  return START_DATE_KST !== null;
+}
 const EXCLUDED_DAY = config.excludedDay;
 const CUTOFF_HOUR = config.cutoffHour;
 const CUTOFF_MINUTE = config.cutoffMinute;
@@ -58,6 +62,7 @@ export function getChickenCount(
   targetDate: Date,
   overrideEndDate?: KSTDate | null,
 ): number {
+  if (!START_DATE_KST) return 0;
   const startUTC = kstMidnightToUTC(START_DATE_KST.year, START_DATE_KST.month, START_DATE_KST.day);
   const effective = toEffectiveKSTDate(targetDate);
   let effectiveUTC = kstMidnightToUTC(effective.year, effective.month, effective.day);
@@ -106,6 +111,7 @@ export function getTotalPrice(count: number): number {
   return count * PRICE_PER_CHICKEN;
 }
 
-export function getStartDate(): Date {
+export function getStartDate(): Date | null {
+  if (!START_DATE_KST) return null;
   return kstMidnightToUTC(START_DATE_KST.year, START_DATE_KST.month, START_DATE_KST.day);
 }

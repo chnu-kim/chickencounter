@@ -3,6 +3,7 @@ import {
   getChickenCount,
   getTotalPrice,
   isTodayTuesday,
+  isActive,
   msUntilNextCutoff,
   getStartDate,
   PRICE_PER_CHICKEN,
@@ -14,6 +15,13 @@ function kst(year: number, month: number, day: number, hour = 0, minute = 0): Da
   return new Date(Date.UTC(year, month - 1, day, hour - 9, minute));
 }
 
+describe('isActive', () => {
+  it('config.startDate가 설정되어 있으면 true', () => {
+    // 현재 config.startDate = "2026-03-30"
+    expect(isActive()).toBe(true);
+  });
+});
+
 describe('config.json 정합성', () => {
   it('PRICE_PER_CHICKEN이 config.pricePerChicken과 일치', () => {
     expect(PRICE_PER_CHICKEN).toBe(config.pricePerChicken);
@@ -21,10 +29,11 @@ describe('config.json 정합성', () => {
 
   it('getStartDate()가 config.startDate와 일치', () => {
     const start = getStartDate();
-    const [year, month, day] = config.startDate.split('-').map(Number);
+    expect(start).not.toBeNull();
+    const [year, month, day] = config.startDate!.split('-').map(Number);
     // KST 자정 = UTC 전날 15:00
     const expected = new Date(Date.UTC(year, month - 1, day) - 9 * 60 * 60_000);
-    expect(start.getTime()).toBe(expected.getTime());
+    expect(start!.getTime()).toBe(expected.getTime());
   });
 });
 

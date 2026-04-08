@@ -1,3 +1,4 @@
+import { isActive } from './utils/chickenCounter'
 import { useChickenCount } from './hooks/useChickenCount'
 import { MainCounter } from './components/MainCounter'
 import { Milestone } from './components/Milestone'
@@ -5,7 +6,21 @@ import { StatusMessage } from './components/StatusMessage'
 import { Details } from './components/Details'
 import './App.css'
 
-function App() {
+function InactivePage() {
+  return (
+    <div className="page">
+      <main className="hero">
+        <h1 className="hero__title">치킨 적립 현황</h1>
+        <div className="counter">
+          <span className="counter__number counter__number--inactive">—</span>
+        </div>
+        <p className="inactive__message">적립이 시작되지 않았습니다</p>
+      </main>
+    </div>
+  )
+}
+
+function Dashboard() {
   const data = useChickenCount()
 
   return (
@@ -18,11 +33,15 @@ function App() {
       </main>
 
       <footer className="footnote">
-        <Details startDate={data.startDate} excludedDay={data.excludedDay} />
+        <Details startDate={data.startDate!} excludedDay={data.excludedDay} />
         <p className="footnote__update">매일 오후 9시 5분 기준 자동 갱신</p>
       </footer>
     </div>
   )
+}
+
+function App() {
+  return isActive() ? <Dashboard /> : <InactivePage />
 }
 
 export default App

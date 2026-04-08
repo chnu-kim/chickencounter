@@ -12,7 +12,7 @@ export interface ChickenCountData {
   totalPrice: number;
   isTuesday: boolean;
   today: Date;
-  startDate: Date;
+  startDate: Date | null;
   excludedDay: string;
 }
 
