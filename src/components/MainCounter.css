@@ -1,0 +1,45 @@
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.counter__chicken {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.counter__number {
+  font-size: 144px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--text-1);
+  letter-spacing: -4px;
+  font-variant-numeric: tabular-nums;
+
+  @media (max-width: 480px) {
+    font-size: 96px;
+    letter-spacing: -2px;
+  }
+}
+
+.counter__unit {
+  font-size: 24px;
+  color: var(--text-2);
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
+}
+
+.counter__price {
+  margin: 12px 0 0;
+  font-size: 18px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+
+  @media (max-width: 480px) {
+    font-size: 15px;
+  }
+}

@@ -1,0 +1,20 @@
+.details {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-2);
+  text-align: center;
+}
+
+.details__key {
+  color: var(--text-3);
+}
+
+.details__dot {
+  display: inline-block;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--text-3);
+  vertical-align: middle;
+  margin: 0 8px;
+}

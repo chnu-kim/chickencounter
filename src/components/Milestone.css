@@ -1,0 +1,45 @@
+.milestone {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.milestone__row {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.milestone__tag {
+  font-size: 11px;
+  color: var(--text-3);
+  min-width: 32px;
+  flex-shrink: 0;
+}
+
+.milestone__label {
+  color: var(--text-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.milestone__price {
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.milestone__row--next {
+  .milestone__label {
+    color: var(--text-2);
+  }
+
+  .milestone__price {
+    color: var(--text-3);
+  }
+}

@@ -1,0 +1,38 @@
+:root {
+  --bg: #111;
+  --bg-raised: #191919;
+  --border: #262626;
+  --text-1: #e0e0e0;
+  --text-2: #999;
+  --text-3: #555;
+
+  --font-sans: -apple-system, 'Segoe UI', sans-serif;
+
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-2);
+  background: var(--bg);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
