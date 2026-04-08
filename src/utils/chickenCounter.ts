@@ -55,8 +55,8 @@ export function getChickenCount(targetDate: Date): number {
   let count = 0;
 
   for (let i = 0; i <= diffDays; i++) {
-    const d = new Date(startUTC.getTime() + i * 86_400_000);
-    if (d.getUTCDay() !== EXCLUDED_DAY) {
+    const kstDay = new Date(Date.UTC(START_DATE_KST.year, START_DATE_KST.month, START_DATE_KST.day + i)).getUTCDay();
+    if (kstDay !== EXCLUDED_DAY) {
       count++;
     }
   }
