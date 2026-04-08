@@ -1,4 +1,5 @@
 const START_DATE_KST = { year: 2026, month: 2, day: 30 }; // 2026-03-30 (월요일)
+const END_DATE_KST: { year: number; month: number; day: number } | null = null; // null이면 계속 증가, 날짜를 넣으면 해당일 이후 중단
 const EXCLUDED_DAY = 2; // 화요일 (getDay(): 0=일, 1=월, 2=화)
 const CUTOFF_HOUR = 21;
 const CUTOFF_MINUTE = 5;
@@ -44,12 +45,23 @@ export function isTodayTuesday(date: Date): boolean {
   return toKST(date).dayOfWeek === EXCLUDED_DAY;
 }
 
-export function getChickenCount(targetDate: Date): number {
+export function getChickenCount(
+  targetDate: Date,
+  overrideEndDate?: { year: number; month: number; day: number } | null,
+): number {
   const startUTC = kstMidnightToUTC(START_DATE_KST.year, START_DATE_KST.month, START_DATE_KST.day);
   const effective = toEffectiveKSTDate(targetDate);
-  const effectiveUTC = kstMidnightToUTC(effective.year, effective.month, effective.day);
+  let effectiveUTC = kstMidnightToUTC(effective.year, effective.month, effective.day);
 
   if (effectiveUTC < startUTC) return 0;
+
+  const endDateKST = overrideEndDate !== undefined ? overrideEndDate : END_DATE_KST;
+  if (endDateKST) {
+    const endUTC = kstMidnightToUTC(endDateKST.year, endDateKST.month, endDateKST.day);
+    if (effectiveUTC > endUTC) {
+      effectiveUTC = endUTC;
+    }
+  }
 
   const diffDays = Math.round((effectiveUTC.getTime() - startUTC.getTime()) / 86_400_000);
   let count = 0;

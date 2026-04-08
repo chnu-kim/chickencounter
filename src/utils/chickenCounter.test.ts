@@ -156,6 +156,57 @@ describe('msUntilNextCutoff', () => {
   });
 });
 
+describe('종료일(END_DATE) 로직', () => {
+  const endDate = { year: 2026, month: 3, day: 5 }; // 2026-04-05 (일)
+
+  it('종료일 이전 → 정상 카운트', () => {
+    // 4/3(금) 21:05 → 3/30(1), 4/1(2), 4/2(3), 4/3(4) = 4마리 (3/31 화요일 제외)
+    expect(getChickenCount(kst(2026, 4, 3, 21, 5), endDate)).toBe(4);
+  });
+
+  it('종료일 당일 → 종료일까지 카운트', () => {
+    // 4/5(일) 21:05 → 3/30~4/5 중 비화요일 = 6마리
+    expect(getChickenCount(kst(2026, 4, 5, 21, 5), endDate)).toBe(6);
+  });
+
+  it('종료일 이후 → 종료일까지만 카운트 (고정)', () => {
+    // 4/12(일) 21:05 → 종료일 4/5까지만 = 6마리
+    expect(getChickenCount(kst(2026, 4, 12, 21, 5), endDate)).toBe(6);
+  });
+
+  it('종료일 훨씬 이후에도 값 동일', () => {
+    // 7/7 21:05 → 여전히 6마리
+    expect(getChickenCount(kst(2026, 7, 7, 21, 5), endDate)).toBe(6);
+  });
+
+  it('overrideEndDate가 null이면 종료일 없이 계속 증가', () => {
+    expect(getChickenCount(kst(2026, 4, 12, 21, 5), null)).toBe(12);
+  });
+
+  it('종료일이 화요일(4/7)이면 해당일은 제외되어 카운트 안 됨', () => {
+    const endTuesday = { year: 2026, month: 3, day: 7 }; // 2026-04-07 (화)
+    // 3/30(1), 4/1(2), 4/2(3), 4/3(4), 4/4(5), 4/5(6), 4/6(7) → 3/31,4/7 제외 = 7마리
+    expect(getChickenCount(kst(2026, 4, 12, 21, 5), endTuesday)).toBe(7);
+  });
+
+  it('종료일 = 시작일 → 1마리', () => {
+    const endSameAsStart = { year: 2026, month: 2, day: 30 }; // 2026-03-30
+    expect(getChickenCount(kst(2026, 4, 12, 21, 5), endSameAsStart)).toBe(1);
+  });
+
+  it('종료일 < 시작일 → 0마리', () => {
+    const endBeforeStart = { year: 2026, month: 2, day: 29 }; // 2026-03-29
+    expect(getChickenCount(kst(2026, 4, 12, 21, 5), endBeforeStart)).toBe(0);
+  });
+
+  it('종료일 당일 21:05 이전 → 유효 날짜가 전날이므로 종료일 미포함', () => {
+    const endDate2 = { year: 2026, month: 3, day: 5 }; // 2026-04-05
+    // 4/5 21:04 → 유효 날짜 4/4 → 종료일(4/5) 이전이므로 종료일 제한 안 걸림
+    // 3/30(1), 4/1(2), 4/2(3), 4/3(4), 4/4(5) = 5마리
+    expect(getChickenCount(kst(2026, 4, 5, 21, 4), endDate2)).toBe(5);
+  });
+});
+
 describe('상수 및 기본값', () => {
   it('PRICE_PER_CHICKEN = 26500', () => {
     expect(PRICE_PER_CHICKEN).toBe(26_500);
