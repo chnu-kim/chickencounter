@@ -3,6 +3,10 @@
   font-size: 13px;
   color: var(--text-2);
   text-align: center;
+
+  @media (max-width: 640px) {
+    font-size: 14px;
+  }
 }
 
 .details__key {

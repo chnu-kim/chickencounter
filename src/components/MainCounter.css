@@ -18,9 +18,9 @@
   letter-spacing: -4px;
   font-variant-numeric: tabular-nums;
 
-  @media (max-width: 480px) {
-    font-size: 96px;
-    letter-spacing: -2px;
+  @media (max-width: 640px) {
+    font-size: 112px;
+    letter-spacing: -3px;
   }
 }
 
@@ -28,8 +28,8 @@
   font-size: 24px;
   color: var(--text-2);
 
-  @media (max-width: 480px) {
-    font-size: 18px;
+  @media (max-width: 640px) {
+    font-size: 20px;
   }
 }
 
@@ -39,7 +39,7 @@
   color: var(--text-2);
   font-variant-numeric: tabular-nums;
 
-  @media (max-width: 480px) {
-    font-size: 15px;
+  @media (max-width: 640px) {
+    font-size: 16px;
   }
 }

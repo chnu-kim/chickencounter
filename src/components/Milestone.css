@@ -11,6 +11,10 @@
   align-items: baseline;
   gap: 10px;
   font-size: 13px;
+
+  @media (max-width: 640px) {
+    font-size: 14px;
+  }
 }
 
 .milestone__tag {
@@ -18,6 +22,10 @@
   color: var(--text-3);
   min-width: 32px;
   flex-shrink: 0;
+
+  @media (max-width: 640px) {
+    font-size: 12px;
+  }
 }
 
 .milestone__label {
