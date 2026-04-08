@@ -1,8 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   getChickenCount,
   getTotalPrice,
   isTodayTuesday,
+  msUntilNextCutoff,
   getStartDate,
   PRICE_PER_CHICKEN,
 } from './chickenCounter';
@@ -54,6 +55,38 @@ describe('getChickenCount', () => {
     // 4/1(수) 21:05 → 유효 날짜 4/1 → 3/30(1) + 4/1(2) = 2마리
     expect(getChickenCount(kst(2026, 4, 1, 21, 5))).toBe(2);
   });
+
+  it('화요일 21:04 → 유효 날짜가 월요일이라 카운트 증가 없음', () => {
+    // 3/31(화) 21:04 → 유효 날짜 3/30(월) = 1마리
+    expect(getChickenCount(kst(2026, 3, 31, 21, 4))).toBe(1);
+  });
+
+  it('30일 누적 (3/30~4/28) → 화요일 4번 제외 = 26마리', () => {
+    // 3/30~4/28 = 30일, 화요일: 3/31, 4/7, 4/14, 4/21, 4/28 = 5번
+    // 하지만 4/28이 화요일이므로 유효 날짜 4/28 자체가 제외
+    // 30 - 5 = 25마리? 아니 다시 세자:
+    // 3/30(월)~4/28(화) = 30일간
+    // 화요일: 3/31, 4/7, 4/14, 4/21, 4/28 = 5일
+    // 비화요일: 30 - 5 = 25마리
+    expect(getChickenCount(kst(2026, 4, 28, 21, 5))).toBe(25);
+  });
+
+  it('100일 누적 검증 — 수학적 계산과 일치', () => {
+    // 3/30 + 99일 = 7/7(화)
+    // 100일 중 화요일 수: floor(99/7)*1 + (시작 요일부터 남은 날 중 화요일 포함 여부)
+    // 3/30(월) 시작, 매 7일마다 화요일 1번 = floor(99/7)=14, 나머지 1일(월)에 화요일 없음 = 14번
+    // 100 - 14 = 86마리... 하지만 7/7이 화요일이므로 유효날짜가 화요일
+    // 실제로는 3/30~7/7 포함하여 화요일은 15번 (3/31,4/7,...,7/7)
+    // 아, 다시. 3/30~7/7 = 100일. 이 중 화요일 개수를 정확히 세자:
+    // 3/31이 첫 화요일, 이후 7일 간격: 3/31,4/7,4/14,4/21,4/28,5/5,5/12,5/19,5/26,6/2,6/9,6/16,6/23,6/30,7/7 = 15번
+    // 100 - 15 = 85마리
+    expect(getChickenCount(kst(2026, 7, 7, 21, 5))).toBe(85);
+  });
+
+  it('자정(KST 0:00) → 유효 날짜는 전날', () => {
+    // 4/2(목) 0:00 → 유효 날짜 4/1(수) = 2마리
+    expect(getChickenCount(kst(2026, 4, 2, 0, 0))).toBe(2);
+  });
 });
 
 describe('isTodayTuesday', () => {
@@ -72,6 +105,14 @@ describe('isTodayTuesday', () => {
   it('화요일 자정 직후(KST 0:01)에도 화요일 판정', () => {
     expect(isTodayTuesday(kst(2026, 3, 31, 0, 1))).toBe(true);
   });
+
+  it('화요일 23:59 → 여전히 화요일', () => {
+    expect(isTodayTuesday(kst(2026, 3, 31, 23, 59))).toBe(true);
+  });
+
+  it('수요일 0:00 → 더 이상 화요일 아님', () => {
+    expect(isTodayTuesday(kst(2026, 4, 1, 0, 0))).toBe(false);
+  });
 });
 
 describe('getTotalPrice', () => {
@@ -85,6 +126,33 @@ describe('getTotalPrice', () => {
 
   it('0마리 = 0원', () => {
     expect(getTotalPrice(0)).toBe(0);
+  });
+});
+
+describe('msUntilNextCutoff', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('21:05 이전이면 당일 21:05까지 남은 시간 반환', () => {
+    // KST 2026-04-01 20:05 → 21:05까지 60분 = 3,600,000ms
+    vi.setSystemTime(kst(2026, 4, 1, 20, 5));
+    expect(msUntilNextCutoff()).toBe(60 * 60_000);
+  });
+
+  it('21:05 정각이면 다음 날 21:05까지 = 24시간', () => {
+    vi.setSystemTime(kst(2026, 4, 1, 21, 5));
+    expect(msUntilNextCutoff()).toBe(24 * 60 * 60_000);
+  });
+
+  it('21:06이면 다음 날 21:05까지 = 23시간 59분', () => {
+    vi.setSystemTime(kst(2026, 4, 1, 21, 6));
+    expect(msUntilNextCutoff()).toBe(23 * 60 * 60_000 + 59 * 60_000);
+  });
+
+  it('반환값은 항상 양수', () => {
+    vi.setSystemTime(kst(2026, 4, 1, 23, 59));
+    expect(msUntilNextCutoff()).toBeGreaterThan(0);
   });
 });
 
