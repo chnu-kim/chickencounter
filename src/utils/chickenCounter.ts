@@ -1,8 +1,17 @@
-const START_DATE_KST = { year: 2026, month: 2, day: 30 }; // 2026-03-30 (월요일)
-const END_DATE_KST: { year: number; month: number; day: number } | null = null; // null이면 계속 증가, 날짜를 넣으면 해당일 이후 중단
-const EXCLUDED_DAY = 2; // 화요일 (getDay(): 0=일, 1=월, 2=화)
-const CUTOFF_HOUR = 21;
-const CUTOFF_MINUTE = 5;
+import config from '../data/config.json';
+
+type KSTDate = { year: number; month: number; day: number };
+
+function parseDate(dateStr: string): KSTDate {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return { year, month: month - 1, day };
+}
+
+const START_DATE_KST = parseDate(config.startDate);
+const END_DATE_KST: KSTDate | null = config.endDate ? parseDate(config.endDate) : null;
+const EXCLUDED_DAY = config.excludedDay;
+const CUTOFF_HOUR = config.cutoffHour;
+const CUTOFF_MINUTE = config.cutoffMinute;
 const KST_OFFSET = 9 * 60; // UTC+9 (분)
 
 /** UTC Date를 KST 기준 연/월/일/시/분으로 분해 */
@@ -24,7 +33,7 @@ function kstMidnightToUTC(year: number, month: number, day: number): Date {
   return new Date(Date.UTC(year, month, day) - KST_OFFSET * 60_000);
 }
 
-/** 적립 기준 시각(KST 21:05) 기준으로 유효 KST 날짜를 반환 */
+/** 적립 기준 시각(KST cutoff) 기준으로 유효 KST 날짜를 반환 */
 function toEffectiveKSTDate(date: Date) {
   const kst = toKST(date);
   let { year, month, day } = kst;
@@ -40,14 +49,14 @@ function toEffectiveKSTDate(date: Date) {
   return { year, month, day, dayOfWeek: new Date(Date.UTC(year, month, day)).getUTCDay() };
 }
 
-/** 오늘(KST 달력 기준)이 화요일인지 */
+/** 오늘(KST 달력 기준)이 제외 요일인지 */
 export function isTodayTuesday(date: Date): boolean {
   return toKST(date).dayOfWeek === EXCLUDED_DAY;
 }
 
 export function getChickenCount(
   targetDate: Date,
-  overrideEndDate?: { year: number; month: number; day: number } | null,
+  overrideEndDate?: KSTDate | null,
 ): number {
   const startUTC = kstMidnightToUTC(START_DATE_KST.year, START_DATE_KST.month, START_DATE_KST.day);
   const effective = toEffectiveKSTDate(targetDate);
@@ -76,7 +85,7 @@ export function getChickenCount(
   return count;
 }
 
-/** 다음 KST 21:05까지 남은 ms */
+/** 다음 KST cutoff까지 남은 ms */
 export function msUntilNextCutoff(): number {
   const now = new Date();
   const kst = toKST(now);
@@ -91,7 +100,7 @@ export function msUntilNextCutoff(): number {
   return cutoffUTC.getTime() - now.getTime();
 }
 
-export const PRICE_PER_CHICKEN = 26_500;
+export const PRICE_PER_CHICKEN = config.pricePerChicken;
 
 export function getTotalPrice(count: number): number {
   return count * PRICE_PER_CHICKEN;

@@ -1,3 +1,4 @@
+import config from '../data/config.json';
 import './Details.css';
 
 interface Props {
@@ -14,6 +15,8 @@ function shortDate(date: Date): string {
   });
 }
 
+const formattedPrice = config.pricePerChicken.toLocaleString('ko-KR');
+
 export function Details({ startDate, excludedDay }: Props) {
   return (
     <p className="details">
@@ -21,7 +24,7 @@ export function Details({ startDate, excludedDay }: Props) {
       <span className="details__dot" aria-hidden="true" />
       <span><span className="details__key">제외</span> {excludedDay}</span>
       <span className="details__dot" aria-hidden="true" />
-      <span><span className="details__key">기준 단가</span> 26,500원</span>
+      <span><span className="details__key">기준 단가</span> {formattedPrice}원</span>
     </p>
   );
 }
