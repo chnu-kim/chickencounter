@@ -5,33 +5,39 @@ interface Props {
   totalPrice: number;
 }
 
+type State = 'achieved' | 'target' | 'upcoming';
+
 function formatPrice(price: number): string {
   return price.toLocaleString('ko-KR');
 }
 
 export function Milestone({ totalPrice }: Props) {
-  const currentIndex = milestones.findLastIndex((m) => m.price <= totalPrice);
-  const current = milestones[currentIndex];
-  const next = milestones[currentIndex + 1];
-
-  if (!current && !next) return null;
+  const targetIndex = milestones.findIndex((m) => m.price > totalPrice);
 
   return (
-    <div className="milestone">
-      {current && (
-        <p className="milestone__row">
-          <span className="milestone__tag">현재</span>
-          <span className="milestone__label">{current.label}</span>
-          <span className="milestone__price">{formatPrice(current.price)}원</span>
-        </p>
-      )}
-      {next && (
-        <p className="milestone__row milestone__row--next">
-          <span className="milestone__tag">다음</span>
-          <span className="milestone__label">{next.label}</span>
-          <span className="milestone__price">{formatPrice(next.price)}원</span>
-        </p>
-      )}
-    </div>
+    <ol className="timeline">
+      {milestones.map((m, i) => {
+        const state: State =
+          targetIndex === -1 || i < targetIndex
+            ? 'achieved'
+            : i === targetIndex
+              ? 'target'
+              : 'upcoming';
+        const remaining = state === 'target' ? m.price - totalPrice : null;
+
+        return (
+          <li key={m.price} className={`timeline__item timeline__item--${state}`}>
+            <span className="timeline__dot" aria-hidden />
+            <span className="timeline__label">{m.label}</span>
+            <span className="timeline__price-group">
+              {remaining !== null && (
+                <span className="timeline__remaining">{formatPrice(remaining)}원 남음</span>
+              )}
+              <span className="timeline__price">{formatPrice(m.price)}원</span>
+            </span>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
