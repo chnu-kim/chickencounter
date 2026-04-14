@@ -12,6 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - 작업 종료 후 정리: `git worktree remove ../chickencounter-<topic>`
 - **서브에이전트 위임 시 반드시 `isolation: "worktree"` 옵션 사용**
 - 작업 시작 전 항상 `git status` + `git worktree list`로 현재 위치 확인
+- **PR 머지 후 즉시 정리**: `git worktree remove <path>` → 로컬 브랜치 삭제(`-d` 머지됨 / `-D` squash) → `git remote prune origin`. 미완료 작업이 남은 브랜치는 사용자에게 확인 후 처리
 - 이 규칙을 어길 것 같으면 작업을 멈추고 사용자에게 먼저 확인할 것
 
 ## Commands
