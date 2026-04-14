@@ -26,7 +26,11 @@ export function Milestone({ totalPrice }: Props) {
         const remaining = state === 'target' ? m.price - totalPrice : null;
 
         return (
-          <li key={m.price} className={`timeline__item timeline__item--${state}`}>
+          <li
+            key={m.price}
+            className={`timeline__item timeline__item--${state}`}
+            aria-current={state === 'target' ? 'step' : undefined}
+          >
             <span className="timeline__dot" aria-hidden />
             <span className="timeline__label">{m.label}</span>
             <span className="timeline__price-group">
