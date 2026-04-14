@@ -1,0 +1,47 @@
+name: Bug report
+description: 동작이 기대와 다르거나 에러가 발생하는 경우
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: 재현 절차
+      description: 어떻게 하면 버그가 발생하는지 단계별로
+      placeholder: |
+        1. 페이지를 연다
+        2. ~ 버튼을 누른다
+        3. ~ 화면이 표시된다
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 결과
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 결과
+      description: 가능하면 콘솔 에러 로그도 첨부
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 환경
+      description: 재현된 조건
+      value: |
+        - Browser:
+        - OS:
+        - Date observed:
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: 의심되는 원인, 관련 PR/이슈 등 (선택)
+    validations:
+      required: false
