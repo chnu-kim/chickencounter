@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Workflow (MUST FOLLOW — 최우선 규칙)
+
+이 규칙은 다른 모든 지침보다 우선한다. 예외 없이 지킬 것.
+
+- **master 브랜치 및 메인 worktree에서 직접 작업 금지.** 어떤 변경도 전용 브랜치 + 전용 worktree에서만 수행
+- **모든 작업은 시작 전에 새 worktree를 생성**해 물리적으로 격리한다 (한 worktree = 한 브랜치 = 한 목적)
+  - 새 작업 시작: `git worktree add ../chickencounter-<topic> -b <type>/<topic>`
+  - 작업 종료 후 정리: `git worktree remove ../chickencounter-<topic>`
+- **서브에이전트 위임 시 반드시 `isolation: "worktree"` 옵션 사용**
+- 작업 시작 전 항상 `git status` + `git worktree list`로 현재 위치 확인
+- 이 규칙을 어길 것 같으면 작업을 멈추고 사용자에게 먼저 확인할 것
+
 ## Commands
 
 - `pnpm dev` — start Vite dev server with HMR
