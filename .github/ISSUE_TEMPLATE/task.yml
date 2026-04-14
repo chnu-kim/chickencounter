@@ -1,0 +1,39 @@
+name: Task
+description: 일반 작업 (feature, chore, ci, docs, refactor 등)
+title: "[Task] "
+labels: ["task"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: 이 작업이 왜 필요한지, 어떤 배경에서 나왔는지
+      placeholder: 최근 ~을 추가한 뒤로 ~한 갭이 생겼습니다.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: 무엇을 어떻게 할 것인지 구체적으로
+      placeholder: |
+        - 파일/디렉토리 ~ 추가
+        - ~ 설정 변경
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: 완료 조건. 체크박스 형식 권장.
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: 트레이드오프, 의존성, 참고 자료 등 (선택)
+    validations:
+      required: false
