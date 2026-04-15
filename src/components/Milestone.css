@@ -92,9 +92,7 @@
 }
 
 .timeline__label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .timeline__item--achieved .timeline__label {
