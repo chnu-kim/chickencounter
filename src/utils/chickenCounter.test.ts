@@ -90,12 +90,12 @@ describe('getChickenCount', () => {
   // 장기 누적
   it('30일간 (3/30~4/28) → 25마리 (화요일 5회 제외)', () => {
     // 화요일: 3/31, 4/7, 4/14, 4/21, 4/28 = 5일, 30 - 5 = 25
-    expect(getChickenCount(kst(2026, 4, 28, 21, 5))).toBe(25);
+    expect(getChickenCount(kst(2026, 4, 28, 21, 5), null)).toBe(25);
   });
 
   it('100일간 (3/30~7/7) → 85마리 (화요일 15회 제외)', () => {
     // 화요일: 3/31부터 7일 간격 15회, 100 - 15 = 85
-    expect(getChickenCount(kst(2026, 7, 7, 21, 5))).toBe(85);
+    expect(getChickenCount(kst(2026, 7, 7, 21, 5), null)).toBe(85);
   });
 });
 
